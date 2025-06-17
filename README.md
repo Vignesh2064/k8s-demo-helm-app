@@ -1,6 +1,3 @@
-Here is your improved **GitHub Markdown-ready README section**, with proper formatting, indentation, and readability for GitHub rendering:
-
----
 
 ````md
 Hi **gaurav_bohra** sir,
