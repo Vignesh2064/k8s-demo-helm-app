@@ -111,7 +111,8 @@ service:
 │   └── app.yaml
 ├── tools/
 │   ├── coredns-patch.yaml
-│   ├── network-policy-block.yaml
+│   ├── network-policy-block.yaml 
+│   ├── debug-pod.yaml
 │   └── diagnosis.md
 └── misconfigs/
     └── values-bad.yaml
