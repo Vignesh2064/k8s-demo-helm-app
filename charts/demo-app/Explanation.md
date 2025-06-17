@@ -115,7 +115,3 @@ Once deployed, this chart integrates with:
 ## ✅ Conclusion
 
 This Helm chart demonstrates how to implement TLS-based NGINX Ingress, path-based service routing, simulate DNS failures, and recover from misconfigurations using GitOps tools like ArgoCD. It provides a hands-on, production-aligned setup for learning or showcasing real-world Kubernetes operations.
-
-```
-
----
