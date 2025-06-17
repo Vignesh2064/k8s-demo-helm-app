@@ -1,6 +1,6 @@
 # Kubernetes DNS Troubleshooting & GitOps Demo
 
-Hi **gaurav_bohra** sir,
+Hi **Gaurav Bohra** sir,
 
 I tried to replicate everything exactly as per your task, especially the requirement:
 
@@ -13,7 +13,7 @@ Here are the detailed steps I followed. This is not based on my own interpretati
 
 ## Step-by-Step Breakdown
 
-### 1. `charts/my-app/`
+### 1. `charts/demo-app/`
 
 Contains a Helm chart that defines:
 - Backend Deployment & Service using [`http-echo`](https://github.com/hashicorp/http-echo)
@@ -107,13 +107,11 @@ service:
 │           ├── frontend-deployment.yaml
 │           ├── frontend-service.yaml
 │           ├── ingress.yaml
-│           └── tls-secret.yaml
 ├── argocd/
 │   └── app.yaml
 ├── tools/
 │   ├── coredns-patch.yaml
 │   ├── network-policy-block.yaml
-│   ├── debug-pod.yaml
 │   └── diagnosis.md
 └── misconfigs/
     └── values-bad.yaml
