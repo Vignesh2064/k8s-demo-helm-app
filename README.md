@@ -98,7 +98,7 @@ service:
 .
 ├── README.md
 ├── charts/
-│   └── my-app/
+│   └── demo-app/
 │       ├── Chart.yaml
 │       ├── values.yaml
 │       └── templates/
@@ -138,7 +138,6 @@ kubectl rollout restart deployment/coredns -n kube-system
 
 # Method 2: NetworkPolicy Block
 kubectl apply -f tools/network-policy-block.yaml
-kubectl apply -f tools/debug-pod.yaml
 ```
 
 ### 3. Diagnose with Tools
