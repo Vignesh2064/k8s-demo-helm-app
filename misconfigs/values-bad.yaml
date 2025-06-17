@@ -1,0 +1,1 @@
+replicaCount: "three" # Invalid string instead of int
