@@ -1,9 +1,7 @@
+# Kubernetes DNS Troubleshooting & GitOps Demo
 
-````md
 Hi **gaurav_bohra** sir,
-
 I tried to replicate everything exactly as per your task, especially the requirement:
-
 > **Modify CoreDNS or create a network policy that breaks service discovery**  
 > **Diagnose with tools like nslookup, dig, tcpdump, and restore functionality**
 
@@ -72,15 +70,137 @@ Also includes recovery steps:
 Intentionally invalid Helm values:
 ```yaml
 replicaCount: "three"  # ❌ should be an integer
-````
+image:
+  tag: "nonexistent-v1.0"  # ❌ invalid image tag
+resources:
+  limits:
+    cpu: "10cores"  # ❌ invalid CPU format
+service:
+  port: "eighty"  # ❌ should be an integer
+```
 
-📌 **Purpose**: Simulate a misconfigured deployment. ArgoCD will:
-
-* Show app status as "Degraded"
-* Allow rollback or correction via Git
+📌 **Purpose**: Simulate deployment failures for ArgoCD rollback testing.
 
 ---
 
-🙏 I hope this aligns perfectly with your expectations. Every file and step was crafted to reflect **exactly what the original task described**, not interpreted loosely. Kindly review and let me know if you would like any further improvement.
+## 📁 Repository Structure
 
 ```
+.
+├── README.md
+├── charts/
+│   └── my-app/
+│       ├── Chart.yaml
+│       ├── values.yaml
+│       └── templates/
+│           ├── backend-deployment.yaml
+│           ├── backend-service.yaml
+│           ├── frontend-deployment.yaml
+│           ├── frontend-service.yaml
+│           ├── ingress.yaml
+│           └── tls-secret.yaml
+├── argocd/
+│   └── app.yaml
+├── tools/
+│   ├── coredns-patch.yaml
+│   ├── network-policy-block.yaml
+│   ├── debug-pod.yaml
+│   └── diagnosis.md
+└── misconfigs/
+    └── values-bad.yaml
+```
+
+## 🚀 Implementation Steps
+
+### 1. Deploy the Application
+```bash
+kubectl apply -f argocd/app.yaml
+argocd app wait my-app --sync
+kubectl get pods,svc,ingress -n default
+```
+
+### 2. Break DNS Resolution
+```bash
+# Method 1: CoreDNS Configuration
+kubectl apply -f tools/coredns-patch.yaml
+kubectl rollout restart deployment/coredns -n kube-system
+
+# Method 2: NetworkPolicy Block
+kubectl apply -f tools/network-policy-block.yaml
+kubectl apply -f tools/debug-pod.yaml
+```
+
+### 3. Diagnose with Tools
+```bash
+kubectl exec -it debug-pod -- bash
+
+# nslookup testing
+nslookup backend-service
+nslookup backend-service.default.svc.cluster.local
+
+# dig analysis
+dig @10.96.0.10 backend-service.default.svc.cluster.local
+dig backend-service.default.svc.cluster.local +trace
+
+# tcpdump capture
+tcpdump -i any -n port 53 -A
+tcpdump -i any -n host backend-service
+```
+
+### 4. Restore Functionality
+```bash
+# Restore CoreDNS
+kubectl rollout undo deployment/coredns -n kube-system
+
+# Remove NetworkPolicy
+kubectl delete -f tools/network-policy-block.yaml
+
+# Verify Recovery
+kubectl exec -it debug-pod -- nslookup backend-service
+```
+
+### 5. ArgoCD Rollback Demo
+```bash
+# Apply broken configuration
+argocd app set my-app --values-literal-file misconfigs/values-bad.yaml
+
+# Check application health
+argocd app get my-app
+
+# Perform rollback
+argocd app history my-app
+argocd app rollback my-app <REVISION-ID>
+argocd app sync my-app
+```
+
+## 🔧 Troubleshooting Commands
+
+### DNS Resolution Testing
+```bash
+nslookup backend-service
+dig backend-service.default.svc.cluster.local
+host backend-service.default.svc.cluster.local
+```
+
+### Network Connectivity
+```bash
+telnet backend-service 80
+nc -zv backend-service 80
+curl backend-service
+```
+
+### Packet Capture
+```bash
+tcpdump -i any -n port 53
+tcpdump -i any -n host backend-service
+tcpdump -i any -n -vv 'port 53 or port 80'
+```
+
+### CoreDNS Investigation
+```bash
+kubectl get pods -n kube-system -l k8s-app=kube-dns
+kubectl logs -n kube-system -l k8s-app=kube-dns
+kubectl get configmap coredns -n kube-system -o yaml
+```
+
+This implementation exactly matches your requirements for breaking service discovery, diagnosing with standard tools, and demonstrating GitOps rollback capabilities.
