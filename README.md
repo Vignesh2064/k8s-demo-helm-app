@@ -1,6 +1,3 @@
-Here's the **cleaned-up, emoji-free professional version** of your `README.md`:
-
-````markdown
 # Kubernetes DNS Troubleshooting & GitOps Demo
 
 Hi **gaurav_bohra** sir,
