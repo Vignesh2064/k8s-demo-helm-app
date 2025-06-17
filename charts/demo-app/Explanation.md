@@ -1,9 +1,4 @@
-* A simple summary/conclusion of why i created this chart
-
----
-
-```markdown
-# 📦 Helm Chart - `my-app`
+# 📦 Helm Chart - `demo-app`
 
 This Helm chart deploys a simple **frontend-backend** application architecture in Kubernetes with **TLS-enabled Ingress** and **path-based routing**. It is a part of a larger GitOps + DNS Failure Simulation demo.
 
@@ -14,7 +9,7 @@ This Helm chart deploys a simple **frontend-backend** application architecture i
 ```
 
 charts/
-└── my-app/
+└── demo-app/
 ├── Chart.yaml
 ├── values.yaml
 └── templates/
@@ -34,14 +29,10 @@ charts/
 - Contains metadata for the Helm chart (e.g., name, version, description).
 - Required for any Helm chart.
 
----
-
 ### ✅ `values.yaml`
 - Default configuration values like image name, replica count, and service port.
 - These values are injected into templates using `{{ .Values }}` syntax.
 - Can be overridden during install/upgrade.
-
----
 
 ### ✅ `templates/ingress.yaml`
 - Defines an **NGINX Ingress** resource.
@@ -49,30 +40,24 @@ charts/
   - `/api` → `backend-service`
   - `/ui` → `frontend-service`
 - Uses **TLS** with a Kubernetes secret named `tls-cert`.
-- Enables external access via `https://myapp.local/api` and `https://myapp.local/ui`.
-
----
+- Enables external access via:
+  - `https://myapp.local/api`
+  - `https://myapp.local/ui`
 
 ### ✅ `templates/backend-deployment.yaml`
 - Deploys the **backend** app using the `hashicorp/http-echo` image.
-- Responds with a static text (e.g., "Hello from Backend API").
+- Responds with static text (e.g., "Hello from Backend API").
 - Simulates a simple API service.
-
----
 
 ### ✅ `templates/backend-service.yaml`
 - Exposes the backend deployment as a Kubernetes service named `backend-service`.
 - Type: `ClusterIP`
 - Port: 80
 
----
-
 ### ✅ `templates/frontend-deployment.yaml`
 - Deploys a basic **frontend** app using the default `nginx` image.
 - Can serve static files or a default index page.
 - Simulates a basic web UI.
-
----
 
 ### ✅ `templates/frontend-service.yaml`
 - Exposes the frontend deployment as a Kubernetes service named `frontend-service`.
@@ -110,7 +95,7 @@ helm install my-app ./charts/my-app
 # 3. Add to /etc/hosts
 echo "127.0.0.1 myapp.local" | sudo tee -a /etc/hosts
 
-# 4. Access:
+# 4. Access the services
 curl -k https://myapp.local/api
 curl -k https://myapp.local/ui
 ````
@@ -122,7 +107,15 @@ curl -k https://myapp.local/ui
 Once deployed, this chart integrates with:
 
 * **ArgoCD** for GitOps-based continuous delivery
-* **CoreDNS patching or NetworkPolicy** for simulating DNS failures
-* **Diagnostic tools** like `dig`, `nslookup`, `tcpdump` to troubleshoot networking
+* **CoreDNS patching** or **NetworkPolicy** to simulate DNS failures
+* **Diagnostic tools** like `dig`, `nslookup`, and `tcpdump` to troubleshoot networking
+
+---
+
+## ✅ Conclusion
+
+This Helm chart demonstrates how to implement TLS-based NGINX Ingress, path-based service routing, simulate DNS failures, and recover from misconfigurations using GitOps tools like ArgoCD. It provides a hands-on, production-aligned setup for learning or showcasing real-world Kubernetes operations.
+
+```
 
 ---
