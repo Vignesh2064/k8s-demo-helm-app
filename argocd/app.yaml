@@ -6,9 +6,9 @@ metadata:
 spec:
   project: default
   source:
-    repoURL: 'https://github.com/your-user/nginx-ingress-demo-gitops.git'
+    repoURL: 'https://github.com/Vignesh2064/k8s-demo-helm-app.git'
     targetRevision: HEAD
-    path: charts/my-app
+    path: charts/demo-app
     helm:
       valueFiles:
         - values.yaml
