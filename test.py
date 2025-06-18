@@ -5,7 +5,10 @@
 #########################
 
 #input string
-a = "abcde"
+#a = "abcde"
+
+# Get input string from user
+a = input("Enter a string: ")
 
 # Print characters in reverse order with their index
 print("Reversed String with Index:")
